@@ -16,8 +16,7 @@ class ERPApp(ctk.CTk):
         self.geometry("1400x1080")
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(1, weight=1)
-
-        # Configuración inicial de la base de datos
+        #CONEX A BASE DE DATOS
         self.conn = sqlite3.connect('notas.db')
         self.cursor = self.conn.cursor()
         self.cursor.execute('''CREATE TABLE IF NOT EXISTS notas 
@@ -25,7 +24,7 @@ class ERPApp(ctk.CTk):
                             texto TEXT NOT NULL)''')
         self.conn.commit()
 
-        # Sidebar izquierda (sin cambios)
+        # Barra izquierda
         self.sidebar = ctk.CTkFrame(self, width=200, fg_color="lightblue", border_width=2, border_color="lightgrey")
         self.sidebar.pack(side="left", fill="y")
         img = ctk.CTkImage(light_image=Image.open("IMGS/no-mads aviation (2).png"), size=(160, 160))
@@ -51,16 +50,14 @@ class ERPApp(ctk.CTk):
         self.historial = ctk.CTkButton(self.sidebar, fg_color="lightblue", border_width=2, border_color="white", 
                                      image=self.img_historial, text="", command=self.show_historial)
         self.historial.pack(padx=30, pady=10)
-
-        # Sidebar de notas (modificado)
+        #Barra de notas (Habria que hacerla extensible)
         self.side_notas = ctk.CTkFrame(self, width=200, fg_color="#8BC34A", border_color="white", border_width=2)
         self.side_notas.pack(side="right", fill="y")
         self.notas_label = ctk.CTkLabel(self.side_notas, text="Notas", font=("Arial",30,"bold"), text_color="white", width=150)
         self.notas_label.pack(pady=(20, 20))
         self.linea_dec = ctk.CTkFrame(self.side_notas, height=2, fg_color="white")
         self.linea_dec.pack(fill="x", padx=20)
-        ###
-        # Frame para las notas con scroll
+        #Frame para las notas con scroll
         self.notas_container = ctk.CTkScrollableFrame(self.side_notas, fg_color="#8BC34A")
         self.notas_container.pack(fill="both", expand=True, padx=10, pady=10)
         
@@ -69,21 +66,17 @@ class ERPApp(ctk.CTk):
                                                border_color="white", text_color="white", width=30, 
                                                height=30, command=self.crear_nota)
         self.boton_agregar_notas.pack(side="bottom", padx=(190,0), pady=2)
-
-        # Área principal (sin cambios)
+        # Área principal
         self.area_principal = ctk.CTkFrame(self, fg_color="white")
         self.area_principal.pack(fill="both", expand=True)
-        
         self.clientes_section = ClientesSeccion(self.area_principal)
         self.vuelos_section = TramosSeccion(self.area_principal)
         self.historial_section = HistorialSeccion(self.area_principal)
         self.finanzas_section = FinanzaSeccion(self.area_principal)
         self.dashboard_section = DashboardSeccion(self.area_principal)
-        
         self.cargarNotas()
 
-    def crear_nota(self):
-        # Ventana emergente para nueva nota
+    def crear_nota(self): #func para crear notas
         ventana_nota = ctk.CTkToplevel(self)
         ventana_nota.title("Nueva Nota")
         ventana_nota.geometry("300x200")
@@ -131,14 +124,10 @@ class ERPApp(ctk.CTk):
             label.pack(side="left")
 
     def eliminar_nota(self, nota_id):
-        # Eliminar de la base de datos
-        self.cursor.execute("DELETE FROM notas WHERE id = ?", (nota_id,))
-        self.conn.commit()
-        
-        # Recargar notas
-        self.cargarNotas()
+        self.cursor.execute("DELETE FROM notas WHERE id = ?", (nota_id,))#Eliminar de la base de datos
+        self.conn.commit() 
+        self.cargarNotas()#Recargar notas
 
-    # Métodos existentes (sin cambios)
     def show_vuelos(self):
         self.clear_main_area()
         self.vuelos_section.render()
@@ -163,14 +152,9 @@ class ERPApp(ctk.CTk):
         for widget in self.area_principal.winfo_children():
             widget.destroy()
 
-    def __del__(self):
-        # Cerrar conexión a la base de datos al cerrar la app
-        self.conn.close()
+    def __del__(self):#cuando se termina ejecuta
+        self.conn.close()#Cerrar conexión a la base de datos al cerrar la app
 
 if __name__ == "__main__":
     app = ERPApp()
     app.mainloop()
-
-    ######################################################################################################################################################
-    def crear_nota(self):
-        pass
