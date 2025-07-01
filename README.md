@@ -34,8 +34,3 @@ Una aplicación de escritorio para la gestión integral de vuelos, pasajeros y f
 - **Extras**:
   - `tkcalendar` para selección de fechas
   - `CTkMessagebox` para diálogos amigables
-
----
-
-## 🛠️ Estructura General
-
